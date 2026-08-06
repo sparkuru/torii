@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "Torii local pairing",
+  "version": "0.1.0",
+  "description": "Pair Torii with its local loopback broker.",
+  "permissions": ["storage"],
+  "host_permissions": ["ws://127.0.0.1/*"],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' ws://127.0.0.1:*"
+  },
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "action": {
+    "default_title": "Torii",
+    "default_popup": "popup.html"
+  }
+}

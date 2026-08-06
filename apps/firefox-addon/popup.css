@@ -1,0 +1,8 @@
+:root { color-scheme: light dark; font: menu; }
+body { margin: 0; min-width: 19rem; }
+main { display: grid; gap: .65rem; padding: 1rem; }
+h1 { font-size: 1.15rem; margin: 0; }
+p { margin: 0; }
+input, button { box-sizing: border-box; font: inherit; padding: .4rem; width: 100%; }
+details { display: grid; gap: .5rem; }
+summary { cursor: pointer; }

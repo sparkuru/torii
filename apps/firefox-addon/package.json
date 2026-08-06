@@ -1,0 +1,12 @@
+{
+  "name": "@torii/firefox-addon",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node ../../scripts/build-addon.mjs"
+  },
+  "dependencies": {
+    "@torii/contracts": "0.1.0"
+  }
+}

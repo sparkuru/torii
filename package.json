@@ -1,0 +1,25 @@
+{
+  "name": "torii",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "packageManager": "npm@9.2.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "start": "tsx apps/mcp-server/src/cli.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test tests/*.test.ts",
+    "build": "npm run build --workspace=@torii/mcp-server && npm run build --workspace=@torii/firefox-addon",
+    "addon:smoke": "web-ext run --source-dir apps/firefox-addon/dist --firefox firefox --browser-console"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.30",
+    "esbuild": "^0.25.2",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.3",
+    "web-ext": "^8.7.0"
+  }
+}

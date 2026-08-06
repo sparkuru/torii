@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Torii</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main>
+      <h1>Torii</h1>
+      <p id="status" role="status">Status: loading</p>
+      <label for="pairing-code">One-time pairing code</label>
+      <input id="pairing-code" type="password" autocomplete="off" spellcheck="false" />
+      <details>
+        <summary>Advanced</summary>
+        <label for="port">Local broker port</label>
+        <input id="port" type="number" min="1" max="65535" value="32145" inputmode="numeric" />
+      </details>
+      <button id="pair" type="button">Pair</button>
+      <button id="revoke" type="button" hidden>Revoke binding</button>
+    </main>
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>
