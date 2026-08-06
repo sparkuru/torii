@@ -1,0 +1,3 @@
+{"_example": "Fill with {\"file\": \"<path>\", \"reason\": \"<why>\"}. Put spec/research files only — no code paths. Run `python3 .trellis/scripts/get_context.py --mode packages` to list available specs. Delete this line once real entries are added."}
+{"file": "prd.md", "reason": "Product requirements and security boundaries for the Phase 0 pairing pipeline"}
+{"file": ".trellis/tasks/00-bootstrap-guidelines/research/technology-stack.md", "reason": "Confirmed TypeScript, MCP, Firefox addon, and test-stack decisions"}
