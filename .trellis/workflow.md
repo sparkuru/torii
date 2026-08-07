@@ -177,6 +177,22 @@ Create new children with `task.py create "<title>" --slug <name> --parent <paren
 No active task. First classify the current turn and ask for task-creation consent before creating any Trellis task.
 Simple conversation / small task: ask only whether this turn should create a Trellis task. If the user says no, skip Trellis for this session.
 Complex task: ask the user if you can create a Trellis task and enter the planning phase. If the user says no, explain, clarify scope, or suggest a smaller split.
+
+### Trellis Plus: Mainline Continuity
+
+For a project-relevant no-task request (continuing work, project status or next
+steps, or beginning implementation), run a read-only Project Pulse first.
+Read `.trellis/mainline.md` when it exists, active and archived task evidence,
+git state, and recorded validation results. Do not run a Pulse for unrelated
+questions.
+
+Default to `guided`: recommend one uniquely ready listed task, but do not
+create a task or edit product files until the user chooses it. Honor `paused`
+without creating work. Only an explicit, bounded `serial` authorization in
+`.trellis/mainline.md` may continue one listed ready task; stop for ambiguity,
+risk, scope change, a dirty worktree, or an unmet dependency. When no mainline
+record or approved objective exists, state that evidence and ask for one
+product-priority decision. Do not treat `completed` as a post-archive trigger.
 [/workflow-state:no_task]
 
 ### Phase 1: Plan
@@ -485,12 +501,40 @@ manager commands.
 
 ### Trellis Plus: Project Validation Profile
 
-The bootstrap repository currently contains no application manifest, CI
-workflow, test suite, source tree, or browser-test configuration. Before the
-first implementation task, derive and record the real project commands from
-repository evidence in the relevant backend or frontend spec index. Until
-then, no lint, type-check, build, unit, integration, browser, or manual
-validation command may be claimed as configured or passing.
+This Node/TypeScript workspace has these project-level automated checks:
+`npm run typecheck`, `npm test`, and `npm run build`. There is no configured
+lint command or CI workflow. Frontend/addon tasks must also read the durable
+browser-validation profile in `.trellis/spec/frontend/index.md` before
+choosing browser automation or manual review. `npm run addon:smoke` launches
+the built Firefox addon through `web-ext`; it is an interactive smoke check,
+not a passing automated browser assertion.
+
+For risky changes, add the smallest task-justified integration, browser, or
+manual check. A skipped or unavailable material check must be recorded and fed
+into the submit-ready review decision rather than reported as passing.
+
+### Trellis Plus: UUPM integration
+
+The project-local Codex UUPM installation at
+`.codex/skills/ui-ux-pro-max/SKILL.md` is complete. Every task that changes the
+Firefox addon popup's UI must load that skill and the frontend spec before
+planning or implementation.
+
+During planning, generate task-specific design-system research with the
+installed `search.py --design-system` workflow, save the raw Markdown under
+the active task's `research/` directory, and promote only approved decisions
+to `design.md`. Do not create a repository-global UUPM `MASTER.md`; Trellis
+task artifacts remain the source of task-specific design decisions. Add the
+research and `design.md` to both implementation and check context.
+
+Implementation must preserve approved visual and interaction decisions unless
+the task design is updated. Checks must compare the popup's responsive layout,
+labels, keyboard/focus behavior, loading/error/success/disabled states,
+light/dark presentation, and accessibility with the approved design research,
+then apply the browser-validation and submit-ready review rules.
+
+If a later project check finds the installation missing or incomplete, ask
+before initializing or overwriting it; do not silently run `uipro init` again.
 
 #### 2.1 Implement `[required · repeatable]`
 
@@ -640,11 +684,10 @@ specific subjective, real-device, private-environment, or otherwise
 unautomatable residual risk.
 
 Maintain exactly one `Trellis Plus: Playwright Validation Profile` in the
-frontend/testing spec once a browser UI and its tooling exist. It must record
-the evidence-backed setup, readiness/base URL, focused and CI commands,
-browsers/viewports, fixtures, accessibility and visual policies, and failure
-artifact locations. The current project has no such evidence, so no profile or
-browser command is configured yet.
+frontend/testing spec. It records the actual Firefox-addon validation boundary,
+including the absence of a configured Playwright suite. Read it before
+consulting external documentation or deciding whether an eligible task needs
+new focused browser coverage.
 
 The AI drives a batched commit of this task's code changes so `/finish-work` can run cleanly afterwards. Goal: produce work commits FIRST, then bookkeeping (archive + journal) commits land after — never interleaved.
 
@@ -695,9 +738,9 @@ The AI drives a batched commit of this task's code changes so `/finish-work` can
    Show the body preview, trailer, and attribution reason in the commit plan.
    Do not add attribution merely because Codex touched files. Omit it for
    small/mechanical changes, user-authored or unrecognized files, and
-   `/finish-work` archive or journal commits. The repository has no established
-   Codex/OpenAI trailer convention, so use this default only when the threshold
-   is met.
+   `/finish-work` archive or journal commits. Recent substantial project
+   commits establish `Co-authored-by: OpenAI Codex <codex@openai.com>` as the
+   project convention; still use it only when the threshold is met.
 
 6. **On confirmation**: run `git add <files>` + `git commit -m "<msg>"` for each batch in order. Do not amend. Do not push.
 
