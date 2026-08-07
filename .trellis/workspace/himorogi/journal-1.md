@@ -27,3 +27,24 @@ Implemented and manually verified the Phase 0 MCP-to-Firefox local pairing flow,
 ### Status
 
 [OK] **Completed**
+
+
+## Session 2: Design Torii project mainline
+
+**Date**: 2026-08-07
+**Task**: Design Torii project mainline
+**Branch**: `shikigami`
+
+### Summary
+
+Created the evidence-based Torii MVP mainline after Phase 0. It records guided continuation, dependency-ordered delivery candidates, verified Phase 0 evidence, and stop conditions for the current dirty Trellis state and stale bootstrap task.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `f0c9065` | (see git log) |
+
+### Status
+
+[OK] **Completed**
