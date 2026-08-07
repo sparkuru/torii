@@ -69,3 +69,24 @@ Completed the one-time bootstrap specification task from the implemented Phase 0
 ### Status
 
 [OK] **Completed**
+
+
+## Session 4: Deliver Phase 1 session-owned tab foundation
+
+**Date**: 2026-08-07
+**Task**: Deliver Phase 1 session-owned tab foundation
+**Branch**: `shikigami`
+
+### Summary
+
+Implemented and manually verified paired MCP session lifecycle, single-tab ownership, Firefox tab open/navigation, MV3 recovery with a binding-scoped reconnect grace and alarms wakeup, then passed the full 20-test suite.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `739b94b` | (see git log) |
+
+### Status
+
+[OK] **Completed**
