@@ -8,7 +8,7 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 2
+- **Total Sessions**: 3
 - **Last Active**: 2026-08-07
 <!-- @@@/auto:current-status -->
 
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~50 | Active |
+| `journal-1.md` | ~71 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 3 | 2026-08-07 | Bootstrap Torii development guidelines | `d62eef0` | `shikigami` |
 | 2 | 2026-08-07 | Design Torii project mainline | `f0c9065` | `shikigami` |
 | 1 | 2026-08-06 | Implement Torii local pairing pipeline | `96c1ca1`, `62227f4` | `shikigami` |
 <!-- @@@/auto:session-history -->

@@ -48,3 +48,24 @@ Created the evidence-based Torii MVP mainline after Phase 0. It records guided c
 ### Status
 
 [OK] **Completed**
+
+
+## Session 3: Bootstrap Torii development guidelines
+
+**Date**: 2026-08-07
+**Task**: Bootstrap Torii development guidelines
+**Branch**: `shikigami`
+
+### Summary
+
+Completed the one-time bootstrap specification task from the implemented Phase 0 baseline. Added evidence-backed backend and Firefox-addon frontend conventions, clarified absent infrastructure and manual browser-validation limits, and archived the bootstrap task.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `d62eef0` | (see git log) |
+
+### Status
+
+[OK] **Completed**
