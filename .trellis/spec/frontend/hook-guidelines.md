@@ -1,51 +1,33 @@
 # Hook Guidelines
 
-> How hooks are used in this project.
+## Current Phase 0 state
 
----
+This addon does not use React, a hook library, or custom `use*` functions.
+There are therefore no hook naming, dependency-array, data-fetching, or hook
+test conventions to follow.
 
-## Overview
+The closest equivalent is explicit async browser-boundary functions:
 
-<!--
-Document your project's hook conventions here.
+- `refresh`, `pair`, `revoke`, and `send` in
+  `apps/firefox-addon/src/popup.ts` handle popup lifecycle and dispatch.
+- `pair`, `authenticateStoredBinding`, `revoke`, and `request` in
+  `apps/firefox-addon/src/background.ts` own asynchronous broker and storage
+  work.
 
-Questions to answer:
-- What custom hooks do you have?
-- How do you handle data fetching?
-- What are the naming conventions?
-- How do you share stateful logic?
--->
+Each function returns a typed `PopupState` or a narrow protocol result rather
+than exposing mutable UI state. For example:
 
-(To be filled by the team)
+```ts
+async function refresh(): Promise<void> {
+  applyState(await send({ kind: "get-state" }));
+}
+```
 
----
+## Guidance
 
-## Custom Hook Patterns
-
-<!-- How to create and structure custom hooks -->
-
-(To be filled by the team)
-
----
-
-## Data Fetching
-
-<!-- How data fetching is handled (React Query, SWR, etc.) -->
-
-(To be filled by the team)
-
----
-
-## Naming Conventions
-
-<!-- Hook naming rules (use*, etc.) -->
-
-(To be filled by the team)
-
----
-
-## Common Mistakes
-
-<!-- Hook-related mistakes your team has made -->
-
-(To be filled by the team)
+- Keep native async behavior as named functions close to the browser boundary.
+- If adding a framework later, establish its lifecycle and test conventions in
+  this document before introducing hooks. Do not retrofit React terms onto the
+  current popup.
+- Use background runtime messaging for cross-context work; a popup close/reopen
+  must not make it the owner of the persistent binding.

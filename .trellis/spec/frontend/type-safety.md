@@ -1,51 +1,39 @@
-# Type Safety
+# Firefox Addon Type Safety
 
-> Type safety patterns in this project.
+## Baseline
 
----
+All addon code is strict TypeScript under the root `tsconfig.json`. The addon
+uses native DOM generics, local discriminated unions, type guards, and shared
+Zod schemas at its external boundaries.
 
-## Overview
+- Import broker constants, `ServerMessage`, and `serverMessageSchema` from
+  `@torii/contracts`.
+- Define addon-private structures (`StoredBinding`, `PopupRequest`,
+  `PopupState`) next to their consumer in `src/background.ts` or `src/popup.ts`.
+- Use the minimal declarations in `src/firefox.d.ts` for the browser APIs the
+  current addon calls.
 
-<!--
-Document your project's type safety conventions here.
+## Runtime validation patterns
 
-Questions to answer:
-- What type system do you use?
-- How are types organized?
-- What validation library do you use?
-- How do you handle type inference?
--->
+Runtime messages and storage are `unknown` until narrowed with a guard;
+WebSocket responses are schema checked:
 
-(To be filled by the team)
+```ts
+const result = serverMessageSchema.safeParse(safeJsonParse(event.data));
+settle(result.success ? result.data : null);
+```
 
----
+Stored extension data similarly passes `isStoredBinding` before it is returned
+from `loadBinding`. Popup DOM selectors use generic query types and an explicit
+required-control check before use.
 
-## Type Organization
+## Do not do
 
-<!-- Where types are defined, shared types vs local types -->
+- Use `any`, blindly cast `browser.runtime.sendMessage` results, or trust
+  `browser.storage.local` values without `isStoredBinding`.
+- Duplicate shared WebSocket message unions or constants in addon code.
+- Accept a broker hostname from the UI; only a validated integer port is
+  mutable in Phase 0.
 
-(To be filled by the team)
-
----
-
-## Validation
-
-<!-- Runtime validation patterns (Zod, Yup, io-ts, etc.) -->
-
-(To be filled by the team)
-
----
-
-## Common Patterns
-
-<!-- Type utilities, generics, type guards -->
-
-(To be filled by the team)
-
----
-
-## Forbidden Patterns
-
-<!-- any, type assertions, etc. -->
-
-(To be filled by the team)
+`apps/firefox-addon/src/background.ts` and `src/popup.ts` are the reference
+implementations for these boundaries.

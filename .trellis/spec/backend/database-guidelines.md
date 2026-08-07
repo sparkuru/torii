@@ -1,51 +1,38 @@
-# Database Guidelines
+# Database and Persistence Guidelines
 
-> Database patterns and conventions for this project.
+## Current Phase 0 state
 
----
+There is no database, ORM, query layer, migration system, or database naming
+convention in this repository. Do not introduce one for pairing state.
 
-## Overview
+The only server-side persistence is one JSON binding record managed by
+`FileBindingRepository` in `packages/session/src/index.ts`. It contains a
+token hash and creation timestamp, not a raw token:
 
-<!--
-Document your project's database conventions here.
+```ts
+this.binding = { tokenHash: hashSecret(token), createdAt: this.now().toISOString() };
+await this.repository.save(this.binding);
+```
 
-Questions to answer:
-- What ORM/query library do you use?
-- How are migrations managed?
-- What are the naming conventions for tables/columns?
-- How do you handle transactions?
--->
+The default file is `binding.json` under the configured Torii data directory;
+the directory is chmod `0700` and the record is atomically written through a
+random temporary file then renamed with mode `0600`.
 
-(To be filled by the team)
+## Repository pattern
 
----
+- Depend on the `BindingRepository` interface in domain code.
+- Keep filesystem details in `FileBindingRepository`.
+- Treat a missing binding file as an unpaired state; propagate other filesystem
+  failures instead of silently treating them as missing.
+- Revoke by deleting the record through `clear()`. Do not retain revoked
+  token hashes.
 
-## Query Patterns
+`tests/phase0.test.ts` supplies `MemoryRepository`, demonstrating the intended
+test seam without a database fixture.
 
-<!-- How should queries be written? Batch operations? -->
+## Do not introduce
 
-(To be filled by the team)
-
----
-
-## Migrations
-
-<!-- How to create and run migrations -->
-
-(To be filled by the team)
-
----
-
-## Naming Conventions
-
-<!-- Table names, column names, index names -->
-
-(To be filled by the team)
-
----
-
-## Common Mistakes
-
-<!-- Database-related mistakes your team has made -->
-
-(To be filled by the team)
+- Raw pairing tokens, codes, page data, or input values in the file.
+- Best-effort non-atomic overwrites, permissive file modes, or a migration
+  framework without a separately approved persistence requirement.
+- SQL/table terminology as if it were an existing project convention.

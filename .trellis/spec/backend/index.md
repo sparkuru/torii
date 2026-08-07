@@ -14,11 +14,11 @@ This directory contains guidelines for backend development. Fill in each file wi
 
 | Guide | Description | Status |
 |-------|-------------|--------|
-| [Directory Structure](./directory-structure.md) | Module organization and file layout | To fill |
-| [Database Guidelines](./database-guidelines.md) | ORM patterns, queries, migrations | To fill |
-| [Error Handling](./error-handling.md) | Error types, handling strategies | To fill |
-| [Quality Guidelines](./quality-guidelines.md) | Code standards, forbidden patterns | To fill |
-| [Logging Guidelines](./logging-guidelines.md) | Structured logging, log levels | To fill |
+| [Directory Structure](./directory-structure.md) | Module organization and file layout | Current (Phase 0) |
+| [Database Guidelines](./database-guidelines.md) | ORM patterns, queries, migrations | Current (no database; file binding persistence) |
+| [Error Handling](./error-handling.md) | Error types, handling strategies | Current (Phase 0) |
+| [Quality Guidelines](./quality-guidelines.md) | Code standards, forbidden patterns | Current (Phase 0) |
+| [Logging Guidelines](./logging-guidelines.md) | Structured logging, log levels | Current (stderr-only diagnostics) |
 | [Browser Broker Contract](./browser-broker-contract.md) | MCP stdio, loopback WebSocket pairing, and revocation | Current |
 
 ---
