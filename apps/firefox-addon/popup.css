@@ -2,7 +2,9 @@
 body { margin: 0; min-width: 19rem; }
 main { display: grid; gap: .65rem; padding: 1rem; }
 h1 { font-size: 1.15rem; margin: 0; }
+h2 { font-size: 1rem; margin: 0; }
 p { margin: 0; }
+section { display: grid; gap: .35rem; border: 1px solid CanvasText; border-radius: .3rem; padding: .65rem; }
 input, button { box-sizing: border-box; font: inherit; padding: .4rem; width: 100%; }
 details { display: grid; gap: .5rem; }
 summary { cursor: pointer; }

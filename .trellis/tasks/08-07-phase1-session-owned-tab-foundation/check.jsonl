@@ -1,0 +1,6 @@
+{"file":"prd.md","reason":"Acceptance criteria, permission approval, and explicit out-of-scope boundaries."}
+{"file":".trellis/tasks/08-07-phase1-session-owned-tab-foundation/design.md","reason":"Check cross-layer contracts, session ownership, privacy, and rollback commitments."}
+{"file":".trellis/tasks/08-07-phase1-session-owned-tab-foundation/research/popup-design-system.md","reason":"Compare popup state, accessibility, and interaction presentation with approved UI decisions."}
+{"file":".trellis/spec/backend/browser-broker-contract.md","reason":"Verify loopback, pairing, secret-handling, and transport behavior remain intact."}
+{"file":".trellis/spec/backend/error-handling.md","reason":"Verify stable error-code and boundary error handling conventions."}
+{"file":".trellis/spec/frontend/quality-guidelines.md","reason":"Apply manifest, accessibility, validation, and manual Firefox review rules."}

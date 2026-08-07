@@ -20,7 +20,7 @@
 | order | task / proposed child | state | readiness and dependency evidence |
 | --- | --- | --- | --- |
 | 0 | Phase 0 — Local pairing pipeline | complete | Archived at `.trellis/tasks/archive/2026-08/08-06-phase0-pairing-pipeline/`; commit `96c1ca1` records the loopback pairing boundary and Phase 0 validation. |
-| 1 | Phase 1 — Session and owned-tab foundation | planned | Depends on completed Phase 0. It is blocked from recommendation while the current dirty Trellis state and stale bootstrap record remain unresolved. |
+| 1 | Phase 1 — Session and owned-tab foundation | active | Task `.trellis/tasks/08-07-phase1-session-owned-tab-foundation/` is in implementation. It follows completed Phase 0 and resolved bootstrap guidance; its remaining gate is the documented manual Firefox runtime path. |
 | 2 | Phase 1 — Snapshot and element-reference lifecycle | planned | Depends on item 1's session, claimed-tab, navigation, and command boundary. |
 | 3 | Phase 1 — Page action suite | planned | Depends on items 1 and 2; actions must use the active session, claimed tab, and current element-reference lifetime. |
 | 4 | Phase 1 — User stop, observability, and MVP integration evidence | planned | Depends on items 1–3; completes popup visibility/stop control, metadata-only audit, cancellation, and targeted Node/Firefox acceptance evidence. |
@@ -30,14 +30,13 @@
 ## Evidence and Decisions
 
 - completed evidence: Phase 0 archive; work commit `96c1ca1`; documentation
-  commit `62227f4`; archived evidence records `npm run typecheck`, `npm test`
-  (8 tests), `npm run build`, `npm run addon:smoke`, and manual
-  pairing/revocation verification.
-- current blocker / dirty-state warning: `.trellis/workflow.md` and
-  `.trellis/spec/frontend/index.md` have uncommitted changes. In addition,
-  `00-bootstrap-guidelines` remains marked `in_progress` despite unchecked
-  checklist items in its PRD. Do not create or start Phase 1 work until the
-  owner directs how to reconcile these records.
-- next user decision: reconcile the uncommitted Trellis changes and decide
-  whether the stale bootstrap task should be completed, corrected, or retired;
-  then choose the recommended Phase 1 foundation task in a guided Pulse.
+  commit `62227f4`; bootstrap-guideline completion `d62eef0` and archive
+  `689ea9f`. Phase 0 records `npm run typecheck`, `npm test` (8 tests),
+  `npm run build`, `npm run addon:smoke`, and manual pairing/revocation
+  verification.
+- current blocker / dirty-state warning: no unrelated dirty worktree state.
+  Phase 1 must still receive the task-specific manual Firefox runtime evidence
+  before it is submit-ready; its automated checks and addon-loading smoke have
+  passed.
+- next user decision: perform and report the task's manual Firefox path, then
+  decide whether to commit/archive the verified Phase 1 foundation.

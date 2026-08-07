@@ -1,0 +1,7 @@
+{"file":"prd.md","reason":"Scope, acceptance criteria, permissions, and approved navigation/claim semantics."}
+{"file":".trellis/tasks/08-07-phase1-session-owned-tab-foundation/design.md","reason":"Cross-layer architecture, typed contracts, session ownership model, validation, and rollback constraints."}
+{"file":".trellis/tasks/08-07-phase1-session-owned-tab-foundation/research/popup-design-system.md","reason":"Task-local raw UI research; implement only the approved minimal popup status treatment."}
+{"file":".trellis/spec/backend/browser-broker-contract.md","reason":"Existing loopback pairing boundary and non-secret transport/error constraints."}
+{"file":".trellis/spec/backend/directory-structure.md","reason":"Current backend package boundaries and dependency rules."}
+{"file":".trellis/spec/frontend/directory-structure.md","reason":"Firefox addon background/popup boundary and shared-contract rules."}
+{"file":".trellis/spec/frontend/quality-guidelines.md","reason":"Required validation and manual Firefox smoke boundary."}

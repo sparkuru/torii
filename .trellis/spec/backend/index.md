@@ -19,7 +19,7 @@ This directory contains guidelines for backend development. Fill in each file wi
 | [Error Handling](./error-handling.md) | Error types, handling strategies | Current (Phase 0) |
 | [Quality Guidelines](./quality-guidelines.md) | Code standards, forbidden patterns | Current (Phase 0) |
 | [Logging Guidelines](./logging-guidelines.md) | Structured logging, log levels | Current (stderr-only diagnostics) |
-| [Browser Broker Contract](./browser-broker-contract.md) | MCP stdio, loopback WebSocket pairing, and revocation | Current |
+| [Browser Broker Contract](./browser-broker-contract.md) | MCP stdio, loopback pairing, session-owned tab commands, and revocation | Current (Phase 1) |
 
 ---
 

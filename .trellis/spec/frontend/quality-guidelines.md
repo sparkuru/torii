@@ -19,6 +19,22 @@ in that temporary profile when runnable checks do not exercise the behavior.
 There is no configured lint command, CI workflow, Playwright setup, or
 automated accessibility scanner. Do not claim such checks passed.
 
+For session/tab changes, the current manual Firefox evidence path is: pair,
+start a session through MCP, list and claim a tab, open or navigate the claimed
+tab, close it to observe claim removal, then revoke. A passing addon load smoke
+does not substitute for this runtime path.
+
+For stored-binding recovery changes, also close the popup and reload the addon
+background before starting the MCP session: list/claim must work without
+opening the popup again. Confirm that open and navigate results show the
+settled destination tab metadata rather than `about:blank` or the prior page.
+
+MV3 worker wakeup uses only the named `torii-reconnect` alarm. Create its
+periodic alarm only after storing a valid binding, route its top-level handler
+through the same serialized stored-binding recovery as popup/startup, and clear
+it whenever the binding is absent, rejected, or revoked. It must not make a
+socket, a popup, or an untrusted alarm payload authority to recover a session.
+
 ## Review checklist
 
 - Keep `manifest.json` permissions and host permissions minimal. Phase 0 has

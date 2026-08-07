@@ -10,10 +10,19 @@
 
 vibe with trellis and codex.
 
-## Phase 0: local pairing
+## Phase 1: paired, session-owned tabs
 
-Torii Phase 0 establishes a local pairing channel only. It does not yet read or
-control web pages.
+Torii establishes a local pairing channel and exposes a deliberately narrow
+Firefox tab foundation. A paired MCP client can start one in-memory session,
+list tabs, claim one tab, open a new claimed tab, and navigate only that
+claimed tab to an absolute `http` or `https` URL. Opening a tab replaces the
+previous claim. There is no page reading, DOM snapshot, script execution,
+content script, click, typing, screenshot, download, or multi-tab workflow.
+
+The server returns `new_tab` and `cross_origin` risk metadata for opening and
+navigating; these are visible signals for a later consent policy, not prompts.
+When the claimed tab closes, the addon disconnects, the session ends, or the
+MCP process restarts, the in-memory claim is cleared.
 
 ### Requirements
 
@@ -56,6 +65,28 @@ TORII_BROKER_PORT=32146 npm start
 The service still binds only to `127.0.0.1`; `TORII_BROKER_PORT` accepts an
 integer from `1` through `65535` and never chooses a port automatically.
 
+The addon requests only `storage`, Firefox's `tabs`, and a local `alarms`
+permission, plus its existing loopback WebSocket host permission. The named
+six-second alarm exists only while a stored pairing binding exists and wakes
+the extension to restore that binding's authenticated loopback socket. It does
+not grant page, host, or browser-data access. The addon does not request `activeTab`,
+`scripting`, general webpage host access, debugger, history, bookmarks,
+cookies, downloads, or native messaging.
+
+### Manual Firefox verification
+
+`npm run addon:smoke` is an interactive Firefox loading check, not browser
+automation. With `npm start` running, load the temporary addon, pair it in the
+popup, and connect an MCP client. Start a session, list tabs, claim a tab, open
+an `https` tab, and navigate that newly claimed tab. Confirm the popup reports
+the active session and controlled tab; then close that tab and confirm the next
+navigate call returns `TAB_NOT_CLAIMED`. End the session and revoke the binding.
+After closing the popup or letting the background worker release, wait for the
+six-second reconnect alarm and verify the stored binding restores the local
+socket without reopening the popup. Revoking the binding removes that alarm.
+No Playwright setup exists in this repository, so Playwright is not effective
+for this extension-runtime path.
+
 ### Checks
 
 ```sh
@@ -67,4 +98,5 @@ npm run addon:smoke
 
 `addon:smoke` starts Firefox with a fresh temporary profile and loads the
 unpacked addon. It is a loading smoke test, not automated popup interaction.
-The remaining manual check is to pair and revoke once using that profile.
+Run the manual Firefox verification above after permission, pairing, or
+session-owned tab changes.

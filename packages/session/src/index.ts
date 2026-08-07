@@ -1,6 +1,7 @@
-import { createHash, randomBytes, timingSafeEqual } from "node:crypto";
+import { createHash, randomBytes, randomUUID, timingSafeEqual } from "node:crypto";
 import { chmod, mkdir, readFile, rename, unlink, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
+import { isNavigationUrl, type BrowserTab, type ErrorCode, type SessionState } from "@torii/contracts";
 
 export interface BindingRecord {
   tokenHash: string;
@@ -103,6 +104,141 @@ export class PairingManager {
     await this.repository.clear();
     return true;
   }
+}
+
+export interface BrowserDriver {
+  listTabs(): Promise<BrowserTab[]>;
+  getTab(tabId: number): Promise<BrowserTab>;
+  openTab(url: string): Promise<BrowserTab>;
+  navigateTab(tabId: number, url: string): Promise<BrowserTab>;
+}
+
+export class SessionOperationError extends Error {
+  public constructor(public readonly code: ErrorCode) {
+    super(code);
+  }
+}
+
+interface ActiveSession {
+  id: string;
+  intent: string;
+  claimedTab: BrowserTab | null;
+}
+
+export class SessionManager {
+  private activeSession: ActiveSession | null = null;
+  private readonly listeners = new Set<(state: SessionState) => void>();
+
+  public constructor(private readonly driver: BrowserDriver) {}
+
+  public start(intent: string): { sessionId: string; status: "active" } {
+    if (this.activeSession !== null) throw new SessionOperationError("SESSION_ALREADY_ACTIVE");
+    this.activeSession = { id: randomUUID(), intent, claimedTab: null };
+    this.emit();
+    return { sessionId: this.activeSession.id, status: "active" };
+  }
+
+  public end(sessionId: string): { status: "ended" } {
+    this.requireSession(sessionId);
+    this.activeSession = null;
+    this.emit();
+    return { status: "ended" };
+  }
+
+  public endForTransportLoss(): void {
+    if (this.activeSession === null) return;
+    this.activeSession = null;
+    this.emit();
+  }
+
+  public async listTabs(sessionId: string): Promise<BrowserTab[]> {
+    this.requireSession(sessionId);
+    return this.driver.listTabs();
+  }
+
+  public async claimTab(sessionId: string, tabId: number): Promise<BrowserTab> {
+    const session = this.requireSession(sessionId);
+    const tab = await this.driver.getTab(tabId);
+    session.claimedTab = tab;
+    this.emit();
+    return tab;
+  }
+
+  public async openTab(sessionId: string, url: string): Promise<BrowserTab> {
+    const session = this.requireSession(sessionId);
+    this.requireNavigationUrl(url);
+    const tab = await this.driver.openTab(url);
+    session.claimedTab = tab;
+    this.emit();
+    return tab;
+  }
+
+  public async navigateTab(sessionId: string, tabId: number, url: string): Promise<BrowserTab> {
+    const session = this.requireClaim(sessionId, tabId);
+    this.requireNavigationUrl(url);
+    try {
+      const tab = await this.driver.navigateTab(tabId, url);
+      session.claimedTab = tab;
+      this.emit();
+      return tab;
+    } catch (error: unknown) {
+      if (isSessionOperationError(error, "TAB_NOT_FOUND")) {
+        session.claimedTab = null;
+        this.emit();
+      }
+      throw error;
+    }
+  }
+
+  public claimedTab(sessionId: string): BrowserTab {
+    const session = this.requireSession(sessionId);
+    if (session.claimedTab === null) throw new SessionOperationError("TAB_NOT_CLAIMED");
+    return session.claimedTab;
+  }
+
+  public tabRemoved(tabId: number): void {
+    if (this.activeSession?.claimedTab?.id !== tabId) return;
+    this.activeSession.claimedTab = null;
+    this.emit();
+  }
+
+  public state(): SessionState {
+    if (this.activeSession === null) return { status: "idle" };
+    return this.activeSession.claimedTab === null
+      ? { status: "active" }
+      : { status: "active", claimedTab: this.activeSession.claimedTab };
+  }
+
+  public subscribe(listener: (state: SessionState) => void): () => void {
+    this.listeners.add(listener);
+    return () => this.listeners.delete(listener);
+  }
+
+  private requireSession(sessionId: string): ActiveSession {
+    if (this.activeSession === null || this.activeSession.id !== sessionId) {
+      throw new SessionOperationError("SESSION_NOT_ACTIVE");
+    }
+    return this.activeSession;
+  }
+
+  private requireClaim(sessionId: string, tabId: number): ActiveSession {
+    const session = this.requireSession(sessionId);
+    if (session.claimedTab?.id !== tabId) throw new SessionOperationError("TAB_NOT_CLAIMED");
+    return session;
+  }
+
+  private requireNavigationUrl(url: string): void {
+    if (!isNavigationUrl(url)) throw new SessionOperationError("INVALID_URL");
+  }
+
+  private emit(): void {
+    const state = this.state();
+    for (const listener of this.listeners) listener(state);
+  }
+}
+
+export function isSessionOperationError(error: unknown, code?: ErrorCode): error is SessionOperationError {
+  return error instanceof SessionOperationError && (code === undefined || error.code === code);
 }
 
 export function defaultStateFile(dataDirectory: string): string {
